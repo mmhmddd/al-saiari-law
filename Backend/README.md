@@ -175,6 +175,18 @@ Production:
 npm start
 ```
 
+## Deploying to Vercel
+
+Deploy the frontend and backend as two Vercel projects from this repository:
+
+1. Create the frontend project with **Root Directory** `Frontend`. Keep the build command `npm run build` and output directory `dist/al-saiari/browser` (these are also set in `Frontend/vercel.json`). Production builds use the production API URL in `Frontend/src/environments/environment.prod.ts`.
+2. Create the backend project with **Root Directory** `Backend`. `Backend/api/index.js` exposes the Express app as a Vercel Function and `Backend/vercel.json` routes requests to it.
+3. Add the variables from `Backend/.env.example` to the backend project's Vercel environment settings. Set `MONGODB_URI`, `JWT_SECRET`, `ADMIN_NAME`, `ADMIN_EMAIL`, and `ADMIN_PASSWORD` at minimum. Add Cloudinary credentials for image uploads and SMTP credentials for email notifications.
+4. Set `CLIENT_URL` to `https://al-saiari-law.vercel.app`. To support preview deployments, add their exact origins as a comma-separated `CLIENT_URLS` value.
+5. Redeploy both projects after changing environment variables.
+
+The MongoDB Atlas network access rules must allow connections from Vercel. The API's health endpoint is `/api/health`.
+
 ## 11. Admin Seed & Migration
 
 Create the first admin account (reads `ADMIN_NAME`, `ADMIN_EMAIL`, `ADMIN_PASSWORD` from `.env`):

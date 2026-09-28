@@ -22,6 +22,14 @@ if (missing.length > 0 && process.env.NODE_ENV !== 'test') {
   process.exit(1);
 }
 
+const defaultClientUrl = process.env.CLIENT_URL || (process.env.NODE_ENV === 'production'
+  ? 'https://al-saiari-law.vercel.app'
+  : 'http://localhost:4200');
+const clientUrls = [...new Set([
+  defaultClientUrl,
+  ...(process.env.CLIENT_URLS || '').split(',').map((url) => url.trim()).filter(Boolean),
+])];
+
 module.exports = {
   nodeEnv: process.env.NODE_ENV || 'development',
   port: parseInt(process.env.PORT, 10) || 5000,
@@ -51,7 +59,8 @@ module.exports = {
     apiSecret: process.env.CLOUDINARY_API_SECRET,
   },
 
-  clientUrl: process.env.CLIENT_URL || 'http://localhost:4200',
+  clientUrl: defaultClientUrl,
+  clientUrls,
 
   rateLimit: {
     windowMinutes: parseInt(process.env.RATE_LIMIT_WINDOW_MINUTES, 10) || 15,
