@@ -1,0 +1,3 @@
+import { Injectable, inject } from '@angular/core';
+import { API_ENDPOINTS } from '../constants/api-endpoints'; import { ApiService } from './api.service';
+@Injectable({ providedIn: 'root' }) export class UserService { private api=inject(ApiService); list(q:Record<string,string|number|undefined>={}){return this.api.get<{items:unknown[];pagination:unknown}>(API_ENDPOINTS.users,q);} save(id:string|undefined,body:unknown){return id?this.api.put(`${API_ENDPOINTS.users}/${id}`,body):this.api.post(API_ENDPOINTS.users,body);} remove(id:string){return this.api.delete(`${API_ENDPOINTS.users}/${id}`);} }
