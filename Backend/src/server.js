@@ -13,7 +13,7 @@ async function start() {
 
   server = app.listen(env.port, () => {
     // eslint-disable-next-line no-console
-    console.log(`[Server] Al Saiari Law Backend running in ${env.nodeEnv} mode on port ${env.port}`);
+    console.log(`[Server] ALSAIARI LAW FIRM backend running in ${env.nodeEnv} mode on port ${env.port}`);
   });
 }
 

@@ -55,7 +55,7 @@ app.use('/api', detectLanguage);
 
 // Make the Vercel project URL return a useful status instead of a 404.
 app.get('/', (req, res) => {
-  res.status(200).json({ success: true, message: 'Al Saiari Law API', data: { health: '/api/health' } });
+  res.status(200).json({ success: true, message: 'ALSAIARI LAW FIRM API', data: { health: '/api/health' } });
 });
 
 // Health check

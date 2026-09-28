@@ -14,11 +14,11 @@ export class SeoService {
     this.doc.documentElement.lang = locale;
     this.doc.documentElement.dir = locale === 'ar' ? 'rtl' : 'ltr';
     const isPrivate = /\/(admin|login|register|forgot-password|reset-password)(\/|$)/.test(route);
-    this.title.setTitle(locale === 'ar' ? 'مكتب السياري للمحاماة' : 'Al Saiari Law Firm');
-    this.meta.updateTag({ name: 'description', content: locale === 'ar' ? 'مكتب السياري للمحاماة والاستشارات القانونية.' : 'Al Saiari Law Firm provides trusted legal counsel and representation.' });
+    this.title.setTitle('ALSAIARI LAW FIRM');
+    this.meta.updateTag({ name: 'description', content: locale === 'ar' ? 'ALSAIARI LAW FIRM للمحاماة والاستشارات القانونية.' : 'ALSAIARI LAW FIRM provides trusted legal counsel and representation.' });
     this.meta.updateTag({ name: 'robots', content: isPrivate ? 'noindex, nofollow' : 'index, follow' });
     this.meta.updateTag({ property: 'og:locale', content: locale === 'ar' ? 'ar_EG' : 'en_US' });
-    this.meta.updateTag({ property: 'og:site_name', content: locale === 'ar' ? 'مكتب السياري للمحاماة' : 'Al Saiari Law Firm' });
+    this.meta.updateTag({ property: 'og:site_name', content: 'ALSAIARI LAW FIRM' });
     const canonicalUrl = new URL(route || `/${locale}`, environment.publicSiteUrl).toString();
     if (!this.canonical) {
       this.canonical = this.doc.createElement('link');

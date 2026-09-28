@@ -67,7 +67,7 @@ module.exports = {
     secure: process.env.EMAIL_SECURE !== 'false',
     user: process.env.EMAIL_USER,
     password: process.env.EMAIL_PASSWORD,
-    fromName: process.env.EMAIL_FROM_NAME || 'Al Saiari Law Firm',
+    fromName: process.env.EMAIL_FROM_NAME || 'ALSAIARI LAW FIRM',
     adminEmail: process.env.ADMIN_EMAIL,
   },
 

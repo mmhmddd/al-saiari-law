@@ -16,6 +16,9 @@ export class LanguageService {
   readonly direction = computed(() => this.locale() === 'ar' ? 'rtl' : 'ltr');
 
   constructor() {
+    // The service can be created after the initial NavigationEnd, when a
+    // deep-linked /en route is already active. Read that route immediately.
+    this.applyRouteLanguage(this.router.url);
     this.router.events.pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
       .subscribe((event) => this.applyRouteLanguage(event.urlAfterRedirects));
   }
@@ -39,11 +42,17 @@ export class LanguageService {
     return this.t(key[message] || fallback);
   }
   setLocale(locale: Locale): void {
-    const parts = this.router.url.split('?');
-    const path = parts[0].split('/').filter(Boolean);
+    if (this.locale() === locale) return;
+    const currentUrl = this.router.url;
+    const pathAndFragment = currentUrl.split('?')[0];
+    const path = pathAndFragment.split('/').filter(Boolean);
     if (path[0] === 'ar' || path[0] === 'en') path[0] = locale;
     else path.unshift(locale);
-    this.router.navigateByUrl(`/${path.join('/')}${parts[1] ? `?${parts[1]}` : ''}`);
+    const targetUrl = `/${path.join('/')}${currentUrl.slice(pathAndFragment.length)}`;
+    // Update labels and text direction immediately; NavigationEnd confirms
+    // the same locale after the route has completed.
+    this.applyRouteLanguage(targetUrl);
+    void this.router.navigateByUrl(targetUrl);
   }
   private applyRouteLanguage(url: string): void {
     const first = url.split(/[/?#]/).filter(Boolean)[0];

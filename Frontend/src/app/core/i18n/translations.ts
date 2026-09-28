@@ -1,6 +1,6 @@
 export type Locale = 'ar' | 'en';
 export const TRANSLATIONS: Record<string, Record<Locale, string>> = {
-  'brand.name': { ar: 'مكتب السياري للمحاماة', en: 'Al Saiari Law Firm' },
+  'brand.name': { ar: 'ALSAIARI LAW FIRM', en: 'ALSAIARI LAW FIRM' },
   'brand.admin': { ar: 'بوابة الإدارة', en: 'ADMIN PORTAL' },
   'nav.overview': { ar: 'نظرة عامة', en: 'OVERVIEW' }, 'nav.content': { ar: 'المحتوى', en: 'CONTENT' },
   'nav.management': { ar: 'الإدارة', en: 'MANAGEMENT' }, 'nav.system': { ar: 'النظام', en: 'SYSTEM' },
@@ -82,7 +82,7 @@ export const TRANSLATIONS: Record<string, Record<Locale, string>> = {
   'settings.contentTitle': { ar: 'إعدادات المكتب والموقع', en: 'Firm and site settings' }, 'settings.help': { ar: 'بيانات التواصل مشتركة، بينما اسم المكتب والعنوان وبيانات SEO ثنائية اللغة.', en: 'Shared contact details with bilingual firm name, address and SEO fields.' },
   'notice.noItems': { ar: 'لا توجد إشعارات حالياً.', en: 'No notifications.' }, 'notification.consultation': { ar: 'طلب استشارة', en: 'Consultation request' },
   'editor.bold': { ar: 'غامق', en: 'Bold' }, 'editor.italic': { ar: 'مائل', en: 'Italic' }, 'editor.link': { ar: 'رابط', en: 'Link' }, 'editor.list': { ar: 'قائمة', en: 'List' },
-  'public.siteTitle': { ar: 'مكتب السياري للمحاماة', en: 'Al Saiari Law Firm' },
+  'public.siteTitle': { ar: 'ALSAIARI LAW FIRM', en: 'ALSAIARI LAW FIRM' },
   'error.invalidCredentials': { ar: 'البريد الإلكتروني أو كلمة المرور غير صحيحة.', en: 'Invalid email or password.' },
   'error.accountInactive': { ar: 'هذا الحساب موقوف. يرجى التواصل مع المسؤول.', en: 'This account has been deactivated. Please contact the administrator.' },
   'error.passwordLength': { ar: 'يجب ألا تقل كلمة المرور عن 8 أحرف.', en: 'Password must be at least 8 characters.' },
