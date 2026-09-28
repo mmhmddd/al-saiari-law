@@ -25,10 +25,28 @@ if (missing.length > 0 && process.env.NODE_ENV !== 'test') {
 const defaultClientUrl = process.env.CLIENT_URL || (process.env.NODE_ENV === 'production'
   ? 'https://al-saiari-law.vercel.app'
   : 'http://localhost:4200');
+const productionFrontendOrigin = 'https://al-saiari-law.vercel.app';
+function normalizeOrigin(value) {
+  try { return new URL(value.trim()).origin; } catch { return null; }
+}
 const clientUrls = [...new Set([
   defaultClientUrl,
+  productionFrontendOrigin,
   ...(process.env.CLIENT_URLS || '').split(',').map((url) => url.trim()).filter(Boolean),
-])];
+].map(normalizeOrigin).filter(Boolean))];
+
+function isAllowedClientOrigin(origin) {
+  const normalized = normalizeOrigin(origin);
+  if (clientUrls.includes(normalized)) return true;
+
+  // Permit preview URLs belonging to this frontend's Vercel project only.
+  try {
+    const { hostname, protocol } = new URL(origin);
+    return protocol === 'https:' && hostname.startsWith('al-saiari-law-') && hostname.endsWith('.vercel.app');
+  } catch {
+    return false;
+  }
+}
 
 module.exports = {
   nodeEnv: process.env.NODE_ENV || 'development',
@@ -61,6 +79,7 @@ module.exports = {
 
   clientUrl: defaultClientUrl,
   clientUrls,
+  isAllowedClientOrigin,
 
   rateLimit: {
     windowMinutes: parseInt(process.env.RATE_LIMIT_WINDOW_MINUTES, 10) || 15,

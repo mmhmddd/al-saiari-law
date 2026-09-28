@@ -25,15 +25,14 @@ const app = express();
 app.use(helmet());
 
 // CORS — locked to the configured Angular frontend origin, never "*" in production
-app.use(
-  cors({
-    origin(origin, callback) {
-      if (!origin || env.clientUrls.includes(origin)) return callback(null, true);
-      return callback(new Error('Origin is not allowed by CORS.'));
-    },
-    credentials: true,
-  }),
-);
+app.use((req, res, next) => {
+  const origin = req.get('origin');
+  if (origin && !env.isAllowedClientOrigin(origin)) {
+    return res.status(403).json({ success: false, message: 'Origin is not allowed by CORS.' });
+  }
+  return next();
+});
+app.use(cors({ origin: true, credentials: true }));
 
 // Body parsing
 app.use(express.json({ limit: '2mb' }));
@@ -53,6 +52,11 @@ app.use('/api', generalLimiter);
 // return flattened, localized content; admin controllers ignore it
 // and always return both languages.
 app.use('/api', detectLanguage);
+
+// Make the Vercel project URL return a useful status instead of a 404.
+app.get('/', (req, res) => {
+  res.status(200).json({ success: true, message: 'Al Saiari Law API', data: { health: '/api/health' } });
+});
 
 // Health check
 app.get('/api/health', (req, res) => {
