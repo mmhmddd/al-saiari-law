@@ -8,6 +8,7 @@
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
     "seed:admin": "node src/scripts/seedAdmin.js",
+    "seed:articles": "node src/scripts/seedArticles.js",
     "migrate:i18n": "node src/scripts/migrateI18n.js"
   },
   "keywords": [

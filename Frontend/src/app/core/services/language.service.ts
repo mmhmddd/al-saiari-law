@@ -24,6 +24,23 @@ export class LanguageService {
   }
 
   t(key: string): string { return TRANSLATIONS[key]?.[this.locale()] ?? key; }
+  errorMessage(error: unknown, fallback = 'error.generic'): string {
+    const response = error && typeof error === 'object' ? error as { status?: number; error?: { message?: string; errors?: { field?: string; message?: string }[] } } : {};
+    const status = response.status;
+    if (status === 0) return this.locale() === 'ar' ? 'تعذر الاتصال بالخادم. تحقق من اتصال الإنترنت وحاول مجدداً.' : 'Could not connect to the server. Check your internet connection and try again.';
+    if (status === 413) return this.locale() === 'ar' ? 'حجم الملف كبير جداً. اختر ملفاً أصغر ثم أعد المحاولة.' : 'The file is too large. Choose a smaller file and try again.';
+    if (status === 429) return this.locale() === 'ar' ? 'تم إرسال طلبات كثيرة خلال وقت قصير. انتظر قليلاً ثم أعد المحاولة.' : 'Too many attempts. Wait a moment and try again.';
+    if (status !== undefined && status >= 500) return this.locale() === 'ar' ? 'حدث خطأ في الخادم. لم يكتمل الطلب؛ حاول لاحقاً أو تواصل مع الدعم.' : 'The server encountered an error. Your request was not completed; try again later or contact support.';
+    const details = response.error?.errors?.filter((item) => item?.message).map((item) => item.field ? `${item.field}: ${item.message}` : item.message) || [];
+    if (details.length) return `${response.error?.message ? `${this.backendMessage(response.error.message, fallback)} — ` : ''}${details.join(' · ')}`;
+    if (response.error?.message) return this.backendMessage(response.error.message, fallback);
+    if (status === 401) return this.locale() === 'ar' ? 'انتهت صلاحية تسجيل الدخول. سجّل الدخول مجدداً.' : 'Your session may have expired. Sign in again.';
+    if (status === 403) return this.locale() === 'ar' ? 'ليس لديك صلاحية لتنفيذ هذا الإجراء.' : 'You do not have permission to complete this action.';
+    if (status === 404) return this.locale() === 'ar' ? 'لم يتم العثور على المطلوب. حدّث الصفحة وحاول مجدداً.' : 'The requested item was not found. Refresh the page and try again.';
+    if (status === 409) return this.locale() === 'ar' ? 'تعارضت البيانات مع سجل موجود. راجع القيم وحاول مجدداً.' : 'This conflicts with an existing record. Review the values and try again.';
+    if (status === 400) return this.locale() === 'ar' ? 'راجع البيانات المدخلة وتأكد من صحتها ثم أعد الإرسال.' : 'Review the entered information, correct any issues, and submit again.';
+    return this.t(fallback);
+  }
   backendMessage(message: string | undefined, fallback = 'error.generic'): string {
     if (!message) return this.t(fallback);
     const key: Record<string, string> = {

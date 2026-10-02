@@ -19,6 +19,7 @@ const articleSchema = new mongoose.Schema(
       url: { type: String, default: null },
       publicId: { type: String, default: null },
     },
+    imageAlt: localizedStringSchema({ maxlength: 200 }),
     author: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',

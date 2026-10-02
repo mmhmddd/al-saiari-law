@@ -13,6 +13,13 @@ export const routes: Routes = [
   {
     path: ':lang', canActivate: [languageGuard], children: [
       { path: '', pathMatch: 'full', loadComponent: () => import('./pages/public-page.component').then((m) => m.PublicPageComponent) },
+      { path: 'about', loadComponent: () => import('./pages/about-page.component').then((m) => m.AboutPageComponent) },
+      { path: 'services', loadComponent: () => import('./pages/services-page.component').then((m) => m.ServicesPageComponent) },
+      { path: 'services/:slug', loadComponent: () => import('./pages/service-detail-page.component').then((m) => m.ServiceDetailPageComponent) },
+      { path: 'articles', loadComponent: () => import('./pages/articles-page.component').then((m) => m.ArticlesPageComponent) },
+      { path: 'articles/:slug', loadComponent: () => import('./pages/article-detail-page.component').then((m) => m.ArticleDetailPageComponent) },
+      { path: 'consultation', loadComponent: () => import('./pages/consultation-booking-page.component').then((m) => m.ConsultationBookingPageComponent) },
+      { path: 'contact', loadComponent: () => import('./pages/contact-page.component').then((m) => m.ContactPageComponent) },
       { path: 'login', canActivate: [guestGuard], data: { mode: 'login' }, loadComponent: () => import('./features/auth/pages/login/login-page.component').then((m) => m.LoginPageComponent) },
       { path: 'register', canActivate: [guestGuard], data: { mode: 'register' }, loadComponent: () => import('./features/auth/pages/register/register-page.component').then((m) => m.RegisterPageComponent) },
       { path: 'forgot-password', canActivate: [guestGuard], data: { mode: 'forgot' }, loadComponent: () => import('./features/auth/pages/forgot-password/forgot-password-page.component').then((m) => m.ForgotPasswordPageComponent) },

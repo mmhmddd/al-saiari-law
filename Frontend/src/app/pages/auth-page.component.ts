@@ -14,7 +14,7 @@ import { LanguageService } from '../core/services/language.service';
     <main class="auth-screen" [attr.dir]="i18n.direction()">
       <section class="auth-brand">
         <div class="auth-brand-inner">
-          <span class="auth-brand-monogram" aria-hidden="true">AS</span>
+          <span class="auth-brand-monogram" aria-hidden="true"><img src="assets/consultation-logo-watermark.png" alt="" /></span>
           <img src="assets/brand/al-saiari-logo.png" [alt]="i18n.t('brand.name')">
           <span class="auth-brand-rule"></span>
           <p>{{i18n.locale()==='ar'?'تميز قانوني مبني على الثقة':'LEGAL EXCELLENCE BUILT ON TRUST'}}</p>

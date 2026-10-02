@@ -104,7 +104,7 @@ exports.getAdminArticleById = catchAsync(async (req, res, next) => {
  * independently — never only one.
  */
 exports.createArticle = catchAsync(async (req, res) => {
-  const { title, excerpt, content, category, tags, status, seo } = req.body;
+  const { title, excerpt, content, category, tags, status, seo, imageAlt } = req.body;
 
   const [slugEn, slugAr] = await Promise.all([
     generateUniqueSlug(Article, title.en, 'en'),
@@ -129,6 +129,7 @@ exports.createArticle = catchAsync(async (req, res) => {
     excerpt,
     content: sanitizedContent,
     featuredImage,
+    imageAlt,
     author: req.user._id,
     category,
     tags,
@@ -147,7 +148,7 @@ exports.updateArticle = catchAsync(async (req, res, next) => {
   const article = await Article.findById(req.params.id);
   if (!article) return next(new AppError('Article not found.', 404));
 
-  const { title, excerpt, content, category, tags, status, seo } = req.body;
+  const { title, excerpt, content, category, tags, status, seo, imageAlt } = req.body;
 
   if (title) {
     if (title.en !== undefined && title.en !== article.title.en) {
@@ -180,6 +181,11 @@ exports.updateArticle = catchAsync(async (req, res, next) => {
   if (tags) {
     if (tags.en !== undefined) article.tags.en = tags.en;
     if (tags.ar !== undefined) article.tags.ar = tags.ar;
+  }
+
+  if (imageAlt) {
+    if (imageAlt.en !== undefined) article.imageAlt.en = imageAlt.en;
+    if (imageAlt.ar !== undefined) article.imageAlt.ar = imageAlt.ar;
   }
 
   if (seo) {
