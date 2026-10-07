@@ -56,7 +56,7 @@ import { SERVICE_OFFERINGS } from "./service-catalog";
           <p class="body-copy">
             {{
               ar
-                ? "شركة سعودية مرخصة تقدم خدمات قانونية متكاملة للشركات والمؤسسات. يجمع فريقنا خبرة واسعة في القانون التجاري، وحوكمة الشركات، والعقود، والمنازعات، والامتثال النظامي. نعمل بدقة وشفافية وسرعة استجابة لحماية مصالح عملائنا ودعم أهدافهم، وفق معايير مهنية تواكب تطورات السوق السعودي ورؤية المملكة 2030."
+                ? "نقدّم للشركات والمؤسسات مشورة قانونية عملية تواكب دورة أعمالها؛ من تأسيس الكيانات وتنظيم الحوكمة وصياغة العقود، إلى إدارة المنازعات والامتثال للأنظمة السعودية. نعمل كشريك قانوني يوازن بين حماية المصالح وتمكين القرار، برؤية تواكب تطورات السوق ومستهدفات رؤية السعودية 2030."
                 : "A licensed Saudi law firm delivering integrated legal services to businesses and organizations. Our experienced team supports clients across commercial law, corporate governance, contracts, disputes, and regulatory compliance. We work with precision, transparency, and responsiveness to protect client interests and support their goals in a changing Saudi market."
             }}
           </p>
@@ -86,14 +86,12 @@ import { SERVICE_OFFERINGS } from "./service-catalog";
             "
             loading="lazy"
           />
+          <div class="about-photo-brand">
+            <img src="assets/brand/al-saiari-logo-transparent.png" alt="شركة السياري للمحاماة ALSAIARI LAW FIRM" />
+          </div>
           <figcaption>
-            {{
-              ar
-                ? "بيئة مهنية لاستقبالكم"
-                : "A considered space to welcome you"
-            }}<a href="assets/profile/al-saiari-profile.pdf" download
-              >{{ ar ? "تحميل الملف التعريفي" : "Download firm profile"
-              }}<span aria-hidden="true">↓</span></a
+            <a href="/assets/profile/al-saiari-profile.pdf" download="al-saiari-profile.pdf"
+              >{{ ar ? "تحميل الملف التعريفي" : "Download firm profile" }}<span aria-hidden="true">↓</span></a
             >
           </figcaption>
         </figure>
@@ -1428,67 +1426,101 @@ import { SERVICE_OFFERINGS } from "./service-catalog";
         grid-column: 2;
         grid-row: 2;
         position: relative;
-        min-height: 410px;
+        min-height: 470px;
+        aspect-ratio: 1 / 1;
         margin: 0;
         overflow: hidden;
-        background: #d8d1c4;
+        border-radius: 40px;
+        background: #101a1b;
         box-shadow: 0 24px 55px #241c101f;
       }
       .about-photo:before {
         content: "";
         position: absolute;
-        inset: 14px;
-        border: 1px solid #ffffff80;
+        z-index: 2;
+        inset: 12px;
+        border: 1px solid #ffffff2b;
+        border-radius: 30px;
+        pointer-events: none;
+      }
+      .about-photo:after {
+        content: "";
+        position: absolute;
         z-index: 1;
+        inset: 0;
+        background: linear-gradient(180deg, #07111424 5%, #07111455 55%, #003f465e 100%);
         pointer-events: none;
       }
       .about-photo img {
         position: absolute;
+        z-index: 0;
         inset: 0;
         width: 100%;
         height: 100%;
         object-fit: cover;
-        filter: saturate(0.78);
+        filter: brightness(0.55) saturate(0.68);
         transition: transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
       }
-      .about-photo:hover img {
+      .about-photo-brand {
+        position: absolute;
+        z-index: 3;
+        top: 27%;
+        left: 50%;
+        width: min(78%, 430px);
+        transform: translateX(-50%);
+        filter: drop-shadow(0 3px 15px #0008);
+      }
+      .about-photo .about-photo-brand img {
+        position: static;
+        display: block;
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+        filter: brightness(0) invert(1);
+      }
+      .about-photo:hover > img {
         transform: scale(1.04);
       }
       .about-photo figcaption {
         position: absolute;
-        z-index: 2;
-        inset: auto 0 0;
+        z-index: 4;
+        inset: auto 0 22px;
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        gap: 20px;
-        padding: 25px 30px;
-        color: #fff;
-        font-size: 13px;
-        background: linear-gradient(0deg, #111d, #1110);
+        justify-content: center;
+        padding: 0 24px;
+        pointer-events: none;
       }
       .about-photo figcaption a {
         display: inline-flex;
         align-items: center;
-        gap: 12px;
-        padding: 12px 16px;
-        border: 1px solid #ffffffa8;
-        border-radius: 3px;
-        background: #181714d9;
+        justify-content: center;
+        gap: 14px;
+        width: min(100%, 480px);
+        min-height: 58px;
+        padding: 14px 24px;
+        border-radius: 999px;
+        border: 1px solid #b8955d;
+        background: #1c1a16;
         color: white;
-        font-size: 12px;
+        font-size: 18px;
+        font-weight: 700;
         white-space: nowrap;
+        pointer-events: auto;
         transition:
-          background 0.2s,
-          transform 0.2s;
+          background 0.2s ease,
+          transform 0.2s ease,
+          box-shadow 0.2s ease;
+        box-shadow: 0 8px 24px #001f2366;
       }
       .about-photo figcaption a:hover {
-        background: #927546;
-        transform: translateY(-2px);
+        background: #342f26;
+        transform: translateY(-3px);
+        box-shadow: 0 12px 28px #001f237a;
       }
       .about-photo figcaption a span {
-        font-size: 17px;
-        color: #e2c99d;
+        font-size: 19px;
+        color: #d8bd8d;
       }
       @media (max-width: 850px) {
         .about.section-grid {
@@ -1501,6 +1533,7 @@ import { SERVICE_OFFERINGS } from "./service-catalog";
         }
         .about-photo {
           min-height: 350px;
+          aspect-ratio: 1 / 1;
         }
         .about-copy h2 {
           font-size: 38px;
@@ -1522,16 +1555,18 @@ import { SERVICE_OFFERINGS } from "./service-catalog";
         .about-photo {
           grid-column: 1;
           grid-row: 3;
-          min-height: 300px;
+          min-height: 0;
+          aspect-ratio: 1 / 1;
+          border-radius: 30px;
         }
         .about-photo figcaption {
-          padding: 17px;
-          align-items: flex-end;
-          flex-wrap: wrap;
+          inset: auto 0 16px;
+          padding: 0 18px;
         }
         .about-photo figcaption a {
           width: 100%;
-          justify-content: center;
+          min-height: 54px;
+          font-size: 16px;
         }
         .about-copy h2 {
           font-size: 36px;
@@ -1557,10 +1592,14 @@ import { SERVICE_OFFERINGS } from "./service-catalog";
         letter-spacing: 0;
       }
       .about-copy .body-copy {
-        max-width: 620px;
-        font-size: 17px;
-        line-height: 2.05;
+        max-width: 660px;
+        font-size: 20px;
+        line-height: 2;
         color: #5c5952;
+      }
+      .is-ar .about-copy .body-copy {
+        font-size: 21px;
+        line-height: 2.05;
       }
       .about-copy .text-link {
         margin-top: 12px;
@@ -1603,7 +1642,7 @@ import { SERVICE_OFFERINGS } from "./service-catalog";
           font-size: clamp(40px, 5vw, 52px);
         }
         .about-copy .body-copy {
-          font-size: 15px;
+          font-size: 18px;
         }
       }
       @media (max-width: 620px) {
@@ -1611,7 +1650,7 @@ import { SERVICE_OFFERINGS } from "./service-catalog";
           font-size: 40px;
         }
         .about-copy .body-copy {
-          font-size: 15px;
+          font-size: 17px;
           line-height: 1.95;
         }
         .about-copy .text-link {
@@ -1776,14 +1815,14 @@ import { SERVICE_OFFERINGS } from "./service-catalog";
         width: 100%;
         height: clamp(180px, 20vw, 270px);
         object-fit: cover;
-        filter: grayscale(0.72) brightness(0.74);
+        filter: grayscale(0.72) brightness(0.88);
         transition:
           transform 0.65s cubic-bezier(0.2, 0.7, 0.2, 1),
           filter 0.4s ease;
       }
       .featured-service:hover .feature-image {
         transform: scale(1.045);
-        filter: grayscale(0.2) brightness(0.8);
+        filter: grayscale(0.2) brightness(0.94);
       }
       .feature-number {
         position: absolute;

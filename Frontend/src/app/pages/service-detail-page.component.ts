@@ -28,7 +28,7 @@ interface PublicServiceDetail {
         <div class="detail-state" role="status">{{ ar ? 'جارٍ تحميل تفاصيل الخدمة…' : 'Loading service details…' }}</div>
       } @else if (service) {
         <header class="service-hero">
-          <img class="service-hero-image" [src]="service.image?.url || service.fallbackImage || 'assets/brand/office.png'" [alt]="service.title" />
+          <img class="service-hero-image" [src]="service.fallbackImage || service.image?.url || 'assets/brand/office.png'" [alt]="service.title" />
           <div class="service-hero-shade"></div>
           <div class="service-hero-content">
             <a class="back-link" [routerLink]="['/', i18n.locale(), 'services']"><span aria-hidden="true">{{ ar ? '→' : '←' }}</span>{{ ar ? 'جميع الخدمات' : 'All services' }}</a>
@@ -90,7 +90,13 @@ export class ServiceDetailPageComponent {
       (_match, label: string, url: string) => `<a href="${url.replace(/^\/(?:ar|en)(?=\/)/, `/${this.i18n.locale()}`)}">${label}</a>`);
   }
   private withArticle(service: PublicServiceDetail | null, slug: string): PublicServiceDetail | null {
-    return service ? { ...service, article: getServiceArticle(slug, this.ar ? 'ar' : 'en') || undefined } : null;
+    if (!service) return null;
+    const catalogItem = SERVICE_OFFERINGS.find((item) => item.id === slug);
+    return {
+      ...service,
+      fallbackImage: catalogItem?.image || service.fallbackImage,
+      article: getServiceArticle(slug, this.ar ? 'ar' : 'en') || undefined,
+    };
   }
   private updateSeo(): void {
     if (!this.service) return;

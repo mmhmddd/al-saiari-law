@@ -24,9 +24,9 @@ interface CalendarDay { value: string; number: number; label: string; disabled: 
           <h1>{{ ar ? 'ابدأ بخطوة واضحة.' : 'Start with a clear next step.' }}</h1>
           <p class="booking-lead">{{ ar ? 'اختر الموعد المناسب، وأخبرنا كيف يمكننا مساعدتك. سيتواصل معك فريقنا لتأكيد التفاصيل.' : 'Choose a preferred time and tell us how we can help. Our team will contact you to confirm the details.' }}</p>
           <div class="booking-points">
-            <div><span>01</span><p>{{ ar ? 'اختر اليوم والوقت المناسبين' : 'Choose a day and time that works for you' }}</p></div>
-            <div><span>02</span><p>{{ ar ? 'أخبرنا ببيانات التواصل والخدمة' : 'Share your contact details and legal service' }}</p></div>
-            <div><span>03</span><p>{{ ar ? 'نتواصل معك لتأكيد الموعد' : 'We will contact you to confirm' }}</p></div>
+            <div><p>{{ ar ? 'اختر اليوم والوقت المناسبين' : 'Choose a day and time that works for you' }}</p></div>
+            <div><p>{{ ar ? 'أخبرنا ببيانات التواصل والخدمة' : 'Share your contact details and legal service' }}</p></div>
+            <div><p>{{ ar ? 'نتواصل معك لتأكيد الموعد' : 'We will contact you to confirm' }}</p></div>
           </div>
           <div class="booking-contact">
             <span>{{ ar ? 'تفضل التواصل مباشرة؟' : 'Prefer to speak with us?' }}</span>
@@ -52,7 +52,7 @@ interface CalendarDay { value: string; number: number; label: string; disabled: 
 
             <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
               <section class="appointment-picker" [attr.aria-label]="ar ? 'اختيار الموعد' : 'Choose an appointment'">
-                <div class="picker-step"><span>01</span><div><strong>{{ ar ? 'اختر اليوم' : 'Choose a day' }}</strong><small>{{ ar ? 'حدد التاريخ المناسب لك' : 'Select a date that works for you' }}</small></div></div>
+                <div class="picker-step"><div><strong>{{ ar ? 'اختر اليوم' : 'Choose a day' }}</strong><small>{{ ar ? 'حدد التاريخ المناسب لك' : 'Select a date that works for you' }}</small></div></div>
                 <button type="button" class="picker-trigger" (click)="calendarOpen = true" [attr.aria-expanded]="calendarOpen">
                   <span class="picker-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg></span>
                   <span class="picker-value" [class.placeholder]="!form.controls.preferredDate.value">{{ form.controls.preferredDate.value ? formatDate(form.controls.preferredDate.value) : (ar ? 'اختر التاريخ' : 'Select a date') }}</span>
@@ -76,7 +76,7 @@ interface CalendarDay { value: string; number: number; label: string; disabled: 
                   </div>
                 }
 
-                <div class="picker-step time-step"><span>02</span><div><strong>{{ ar ? 'اختر الوقت' : 'Choose a time' }}</strong><small>{{ ar ? 'حدد الوقت المفضل لك' : 'Pick a preferred time' }}</small></div></div>
+                <div class="picker-step time-step"><div><strong>{{ ar ? 'اختر الوقت' : 'Choose a time' }}</strong><small>{{ ar ? 'حدد الوقت المفضل لك' : 'Pick a preferred time' }}</small></div></div>
                 <button type="button" class="picker-trigger" [class.picker-disabled]="!form.controls.preferredDate.value" [disabled]="!form.controls.preferredDate.value" (click)="timeOpen = true" [attr.aria-expanded]="timeOpen">
                   <span class="picker-icon clock-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
                   <span class="picker-value" [class.placeholder]="!form.controls.preferredTime.value">{{ form.controls.preferredTime.value ? formatTime(form.controls.preferredTime.value) : (ar ? 'اختر الوقت' : 'Select a time') }}</span>
@@ -95,7 +95,7 @@ interface CalendarDay { value: string; number: number; label: string; disabled: 
               </section>
 
               @if (form.controls.preferredDate.value && form.controls.preferredTime.value) {
-                <div class="details-divider"><span>03</span><strong>{{ ar ? 'بيانات التواصل والخدمة القانونية' : 'Your details and legal service' }}</strong></div>
+                <div class="details-divider"><strong>{{ ar ? 'بيانات التواصل والخدمة القانونية' : 'Your details and legal service' }}</strong></div>
                 <label class="field">
                   <span>{{ ar ? 'الاسم الكامل' : 'Full name' }} <b>*</b></span>
                   <input formControlName="name" autocomplete="name" [attr.placeholder]="ar ? 'اكتب اسمك الكامل' : 'Enter your full name'" [attr.aria-invalid]="showError('name')" />

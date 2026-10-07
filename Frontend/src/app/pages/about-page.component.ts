@@ -17,11 +17,11 @@ import { SiteFooterComponent } from './shared/site-footer.component';
         <h1>@if (ar) { <span>رؤية قانونية واضحة،</span><span>وشراكة تبني الثقة.</span> } @else { <span>Clear legal vision.</span><span>Partnership built on trust.</span> }</h1>
         <p class="hero-lead">{{ ar ? 'نرافق الشركات والأفراد في قراراتهم القانونية برؤية عملية، وعناية مهنية، وفهم دقيق لما يهمهم.' : 'We guide businesses and individuals through important legal decisions with practical insight, professional care, and a clear understanding of what matters to them.' }}</p>
         <a class="hero-cta" [routerLink]="['/', i18n.locale(), 'consultation']">{{ ar ? 'ابدأ حواراً معنا' : 'Start a conversation' }} <span aria-hidden="true">↗</span></a>
-        <span class="hero-index" aria-hidden="true">01 <i></i> ALSAIARI</span>
+        <span class="hero-index" aria-hidden="true">ALSAIARI</span>
       </section>
 
       <section class="firm-overview" aria-labelledby="firm-heading">
-        <div class="section-marker"><span>01</span><i></i><small>{{ ar ? 'من نحن' : 'WHO WE ARE' }}</small></div>
+        <div class="section-marker"><i></i><small>{{ ar ? 'من نحن' : 'WHO WE ARE' }}</small></div>
         <div class="overview-copy">
           <p class="eyebrow">{{ ar ? 'نبذة عن الشركة' : 'ABOUT THE FIRM' }}</p>
           <h2 id="firm-heading">{{ ar ? 'قانون يفهم أعمالك، ويصون مصالحك.' : 'Legal counsel shaped around your business.' }}</h2>
@@ -68,13 +68,11 @@ import { SiteFooterComponent } from './shared/site-footer.component';
         </div>
         <div class="purpose-grid">
           <article class="purpose-card vision-card">
-            <span class="purpose-symbol" aria-hidden="true">01</span>
             <p class="eyebrow">{{ ar ? 'رؤيتنا' : 'OUR VISION' }}</p>
             <h3>{{ ar ? 'أن نكون المستشار القانوني الموثوق لرواد الأعمال والشركات.' : 'To be a trusted legal adviser to entrepreneurs and companies.' }}</h3>
             <p>{{ ar ? 'مستشار يفهم الطموحات ويقدم رؤية قانونية تسند خطوات النمو بثقة.' : 'A trusted adviser who understands ambition and helps businesses move forward with confidence.' }}</p>
           </article>
           <article class="purpose-card mission-card">
-            <span class="purpose-symbol" aria-hidden="true">02</span>
             <p class="eyebrow">{{ ar ? 'رسالتنا' : 'OUR MISSION' }}</p>
             <h3>{{ ar ? 'تقديم خدمات قانونية متكاملة بمعايير مهنية رفيعة.' : 'Deliver integrated legal services to the highest professional standards.' }}</h3>
             <p>{{ ar ? 'نقدم حلولاً عملية ومخصصة تساعد العملاء على صون مصالحهم وتحقيق أهدافهم في بيئة أعمال متغيرة.' : 'We provide tailored, practical solutions that protect client interests and support their objectives in a changing business environment.' }}</p>
@@ -91,7 +89,6 @@ import { SiteFooterComponent } from './shared/site-footer.component';
         <div class="values-grid">
           @for (value of values; track value.id) {
             <article class="value-card">
-              <span class="value-number">0{{ value.id }}</span>
               <h3>{{ ar ? value.titleAr : value.titleEn }}</h3>
               <p>{{ ar ? value.copyAr : value.copyEn }}</p>
               <i aria-hidden="true"></i>
@@ -107,7 +104,7 @@ import { SiteFooterComponent } from './shared/site-footer.component';
         </div>
         <div class="goals-grid">
           @for (goal of goals; track goal.id) {
-            <article class="goal-card"><span>0{{ goal.id }}</span><h3>{{ ar ? goal.titleAr : goal.titleEn }}</h3><p>{{ ar ? goal.copyAr : goal.copyEn }}</p></article>
+            <article class="goal-card"><h3>{{ ar ? goal.titleAr : goal.titleEn }}</h3><p>{{ ar ? goal.copyAr : goal.copyEn }}</p></article>
           }
         </div>
       </section>
