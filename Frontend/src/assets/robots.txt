@@ -11,4 +11,4 @@ Disallow: /en/forgot-password
 Disallow: /ar/reset-password/
 Disallow: /en/reset-password/
 
-Sitemap: https://al-saiari-law.vercel.app/sitemap.xml
+Sitemap: https://www.alsaiarilaw.com/sitemap.xml

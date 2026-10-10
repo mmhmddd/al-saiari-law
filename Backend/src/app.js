@@ -32,7 +32,15 @@ app.use((req, res, next) => {
   }
   return next();
 });
-app.use(cors({ origin: true, credentials: true }));
+app.use(cors({
+  origin: (origin, callback) => {
+    // Requests without an Origin (such as server-to-server health checks) do
+    // not need CORS headers. Browser origins must match the explicit allowlist.
+    if (!origin) return callback(null, false);
+    return callback(null, env.isAllowedClientOrigin(origin) ? origin : false);
+  },
+  credentials: true,
+}));
 
 // Body parsing
 app.use(express.json({ limit: '2mb' }));

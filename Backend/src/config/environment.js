@@ -23,17 +23,25 @@ if (missing.length > 0 && process.env.NODE_ENV !== 'test') {
 }
 
 const defaultClientUrl = process.env.CLIENT_URL || (process.env.NODE_ENV === 'production'
-  ? 'https://al-saiari-law.vercel.app'
+  ? 'https://www.alsaiarilaw.com'
   : 'http://localhost:4200');
-const productionFrontendOrigin = 'https://al-saiari-law.vercel.app';
+const productionFrontendOrigins = [
+  'https://www.alsaiarilaw.com',
+  'https://alsaiarilaw.com',
+  'https://al-saiari-law.vercel.app',
+];
 function normalizeOrigin(value) {
   try { return new URL(value.trim()).origin; } catch { return null; }
 }
 const clientUrls = [...new Set([
   defaultClientUrl,
-  productionFrontendOrigin,
+  ...productionFrontendOrigins,
   ...(process.env.CLIENT_URLS || '').split(',').map((url) => url.trim()).filter(Boolean),
-].map(normalizeOrigin).filter(Boolean))];
+].map(normalizeOrigin).filter((origin) => {
+  if (!origin) return false;
+  // Production browser access must use TLS, including origins supplied by env.
+  return process.env.NODE_ENV !== 'production' || new URL(origin).protocol === 'https:';
+}))];
 
 function isAllowedClientOrigin(origin) {
   const normalized = normalizeOrigin(origin);
