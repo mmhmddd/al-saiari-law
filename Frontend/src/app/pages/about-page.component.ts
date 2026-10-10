@@ -1,13 +1,14 @@
-import { Component, inject } from '@angular/core';
+﻿import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { LanguageService } from '../core/services/language.service';
 import { SiteNavbarComponent } from './shared/site-navbar.component';
 import { SiteFooterComponent } from './shared/site-footer.component';
+import { FirmStatsComponent } from './shared/firm-stats.component';
 
 @Component({
   selector: 'app-about-page',
   standalone: true,
-  imports: [RouterLink, SiteNavbarComponent, SiteFooterComponent],
+  imports: [RouterLink, SiteNavbarComponent, SiteFooterComponent, FirmStatsComponent],
   template: `
     <app-site-navbar />
     <main class="about-page" [attr.dir]="i18n.direction()" [class.is-ar]="ar">
@@ -34,25 +35,23 @@ import { SiteFooterComponent } from './shared/site-footer.component';
         </figure>
       </section>
 
-      <section class="partners-section" aria-labelledby="partners-heading">
-        <div class="partners-heading">
-          <div>
-            <p class="eyebrow">{{ ar ? 'شراكات تدعم الأثر' : 'COLLABORATION & TRUST' }}</p>
-            <h2 id="partners-heading">{{ ar ? 'شركاء النجاح' : 'Partners in success' }}</h2>
-          </div>
-          <p>{{ ar ? 'نمضي إلى الأمام بالتعاون والثقة، ونعتز بالشعارات الواردة ضمن الملف التعريفي للشركة.' : 'We value collaboration and trust, and are proud to feature the partner marks included in our company profile.' }}</p>
+      <app-firm-stats />
+
+      <section class="about-partners-section" [class.is-ar]="ar" aria-labelledby="partners-heading">
+        <div class="partners-copy">
+          <p class="eyebrow">{{ ar ? 'شراكات تدعم الثقة' : 'COLLABORATION & TRUST' }}</p>
+          <h2 id="partners-heading">{{ ar ? 'شركاء النجاح' : 'Our partners' }}</h2>
+          <p>{{ ar ? 'نعتز بعلاقاتنا المهنية، ونؤمن أن التعاون المبني على الثقة يصنع أثراً مستداماً.' : 'We value our professional relationships and believe trusted collaboration creates lasting impact.' }}</p>
+          <span class="partners-caption">{{ ar ? 'معاً نحو أثرٍ أفضل' : 'Working together for better outcomes' }}</span>
         </div>
-        <div class="partners-carousel" aria-label="Partners in success logos">
-          <div class="partner-track">
-            <div class="partner-sequence">
-              @for (partner of partners; track partner.nameEn) {
-                <article class="partner-card"><img [src]="partner.logo" [alt]="ar ? partner.nameAr : partner.nameEn" loading="lazy" /><span>{{ ar ? partner.nameAr : partner.nameEn }}</span></article>
-              }
-            </div>
-            @for (copy of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]; track copy) {
-              <div class="partner-sequence" aria-hidden="true">
+        <div class="partners-visual" [attr.aria-label]="ar ? 'شعارات شركائنا' : 'Partner logos'">
+          <div class="about-partners-track">
+            @for (copy of [0, 1]; track copy) {
+              <div class="about-partners-sequence" [attr.aria-hidden]="copy !== 0 ? 'true' : null">
                 @for (partner of partners; track partner.nameEn) {
-                  <article class="partner-card"><img [src]="partner.logo" alt="" loading="lazy" /><span>{{ ar ? partner.nameAr : partner.nameEn }}</span></article>
+                  <article class="about-partner-tile">
+                    <img [src]="partner.logo" [alt]="copy === 0 ? (ar ? partner.nameAr : partner.nameEn) : ''" loading="lazy" />
+                  </article>
                 }
               </div>
             }
@@ -129,7 +128,29 @@ import { SiteFooterComponent } from './shared/site-footer.component';
     </main>
     <app-site-footer />
   `,
+  styles: [`
+    .about-partners-section{display:flex;flex-direction:column;align-items:stretch;gap:clamp(16px,2vw,22px);padding:clamp(42px,5vw,68px) clamp(25px,9vw,140px);background:transparent;direction:ltr}
+    .partners-copy{width:100%;max-width:none;text-align:center}
+    .partners-copy .eyebrow{margin-bottom:10px}
+    .partners-copy h2{margin:0 0 10px;color:#172823;font-size:clamp(44px,5.4vw,72px);font-weight:700}
+    .partners-copy>p:not(.eyebrow){max-width:700px;margin:0 auto;color:#6d6a63;font-size:clamp(18px,1.7vw,22px);line-height:1.9}
+    .partners-caption{display:inline-flex;align-items:center;justify-content:center;gap:12px;margin-top:12px;color:#8c7248;font-size:14px;font-weight:700}
+    .partners-caption:before{content:'';width:35px;height:1px;background:#b0905d}
+    .about-partners-section.is-ar .partners-copy{direction:rtl;text-align:center;margin-inline:auto}
+    .about-partners-section.is-ar .partners-copy>p:not(.eyebrow){font-family:'SFMada',Georgia,serif;line-height:2}
+    .partners-visual{position:relative;isolation:isolate;width:100%;height:230px;overflow:hidden;direction:ltr}
+    .about-partners-track{display:flex;width:max-content;height:100%;gap:0;margin:0;padding:0;animation:partner-scroll-left 34s linear infinite;will-change:transform}
+    .about-partners-sequence{display:flex;flex:0 0 auto;flex-direction:row;align-items:stretch;gap:0;height:100%;margin:0;padding:0}
+    .about-partner-tile{display:grid;flex:0 0 clamp(230px,26vw,290px);place-items:center;height:100%;min-width:0;margin:0;padding:12px;background:transparent;border:0;overflow:hidden}
+    .about-partner-tile img{display:block;width:min(94%,270px);height:168px;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;object-fit:contain}
+    @keyframes partner-scroll-left{to{transform:translateX(-50%)}}
+    @media(max-width:800px){.about-partners-section{gap:18px;padding:46px 24px}.partners-visual{height:205px}.about-partner-tile{flex-basis:235px}.about-partner-tile img{height:152px}}
+    @media(max-width:480px){.about-partners-section{gap:16px;padding:42px 18px}.partners-copy h2{font-size:42px}.partners-copy>p:not(.eyebrow){font-size:16px;line-height:1.8}.partners-visual{height:176px}.about-partner-tile{flex-basis:185px;padding:8px}.about-partner-tile img{width:96%;height:140px}}
+    @media(prefers-reduced-motion:reduce){.partners-visual{overflow-x:auto}.about-partners-track{animation:none!important;transform:none!important;will-change:auto}}
+  `],
 })
+
+
 export class AboutPageComponent {
   readonly i18n = inject(LanguageService);
   readonly partners = [

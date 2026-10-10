@@ -61,3 +61,5 @@ export class HomeHeroComponent {
     secondaryAr: 'استكشف خدماتنا', secondaryEn: 'Explore our services',
   };
 }
+
+

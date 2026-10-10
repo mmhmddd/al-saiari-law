@@ -7,11 +7,13 @@ import { SiteNavbarComponent } from "./shared/site-navbar.component";
 import { SiteFooterComponent } from "./shared/site-footer.component";
 import { RouterLink } from "@angular/router";
 import { SERVICE_OFFERINGS } from "./service-catalog";
+import { FirmStatsComponent } from "./shared/firm-stats.component";
 
 @Component({
   standalone: true,
   imports: [
     HomeHeroComponent,
+    FirmStatsComponent,
     SiteNavbarComponent,
     SiteFooterComponent,
     ReactiveFormsModule,
@@ -163,6 +165,8 @@ import { SERVICE_OFFERINGS } from "./service-catalog";
         >
       </section>
 
+      <app-firm-stats />
+
       <section appScrollReveal class="approach" id="approach">
         <div class="approach-panel">
           <div class="approach-intro">
@@ -277,58 +281,30 @@ import { SERVICE_OFFERINGS } from "./service-catalog";
       <section class="faq-section" id="faq">
         <div>
           <p class="eyebrow">
-            {{ ar ? "إجابات أولية" : "A FEW FIRST ANSWERS" }}
+            {{ ar ? "قبل أن تبدأ." : "A FEW FIRST ANSWERS" }}
           </p>
-          <h2>{{ ar ? "قبل أن تبدأ." : "Before we begin." }}</h2>
+          <h2>{{ ar ? "الأسئلة الشائعة" : "Frequently asked questions" }}</h2>
         </div>
         <div class="faq-list">
           <details>
-            <summary>
-              {{
-                ar
-                  ? "كيف أبدأ بطلب استشارة؟"
-                  : "How do I request a consultation?"
-              }}<span>+</span>
-            </summary>
-            <p>
-              {{
-                ar
-                  ? "تواصل معنا عبر بيانات الاتصال، وشاركنا نبذة موجزة عن المسألة لنرشدك إلى الخطوة المناسبة."
-                  : "Reach out using the contact details below and share a brief outline of your matter. Our team will guide you on the next step."
-              }}
-            </p>
+            <summary>{{ ar ? "كيف أبدأ بطلب استشارة؟" : "How do I request a consultation?" }}<span>+</span></summary>
+            <p>{{ ar ? "ابدأ بمشاركة نبذة واضحة عن المسألة والنتيجة التي تسعى إليها، مع أي مواعيد أو مستندات أساسية ذات صلة. يساعدنا ذلك على فهم احتياجك وتوجيهك إلى الخطوة التالية، ثم يمكن ترتيب موعد لمناقشة التفاصيل ونطاق العمل المتوقع." : "Start by sharing a clear outline of the matter, the outcome you are seeking, and any relevant deadlines or key documents. This helps us understand what you need and guide you to the next step. You can then arrange a consultation to discuss the details and the proposed scope of work." }} <a [routerLink]="['/', i18n.locale(), 'consultation']">{{ ar ? "اطلب استشارة" : "Request a consultation" }}</a>.</p>
           </details>
           <details>
-            <summary>
-              {{
-                ar
-                  ? "هل يمكنني معرفة الخيارات المتاحة قبل اتخاذ قرار؟"
-                  : "Can I understand my options before deciding?"
-              }}<span>+</span>
-            </summary>
-            <p>
-              {{
-                ar
-                  ? "نعم، هدف النقاش الأولي هو توضيح المسارات والاعتبارات ذات الصلة لمساعدتك على اتخاذ قرار مدروس."
-                  : "Yes. An initial discussion can clarify the available paths and key considerations, helping you make an informed decision."
-              }}
-            </p>
+            <summary>{{ ar ? "هل يمكنني معرفة الخيارات المتاحة قبل اتخاذ قرار؟" : "Can I understand my options before deciding?" }}<span>+</span></summary>
+            <p>{{ ar ? "نعم. نبدأ بفهم الوقائع والأهداف، ثم نوضح المسارات القانونية الممكنة وما يرتبط بها من خطوات واعتبارات ومخاطر عملية. يتيح لك ذلك مقارنة الخيارات وطرح أسئلتك قبل اختيار المسار المناسب، مع تحديد ما يحتاج إلى مراجعة مستندات أو معلومات إضافية." : "Yes. We begin by understanding the facts and your goals, then explain the available legal paths and their practical steps, considerations and risks. This gives you room to compare options and ask questions before choosing a direction, while identifying anything that needs further documents or information." }}</p>
           </details>
           <details>
-            <summary>
-              {{
-                ar
-                  ? "كيف تتعاملون مع سرية المعلومات؟"
-                  : "How is confidential information handled?"
-              }}<span>+</span>
-            </summary>
-            <p>
-              {{
-                ar
-                  ? "نتعامل مع المعلومات التي تشاركها بعناية وسرية مهنية، ونوضح نطاق العمل قبل المضي في أي إجراء."
-                  : "We handle information you share with care and professional discretion, and clarify the scope of work before proceeding."
-              }}
-            </p>
+            <summary>{{ ar ? "كيف تتعاملون مع سرية المعلومات؟" : "How is confidential information handled?" }}<span>+</span></summary>
+            <p>{{ ar ? "نتعامل مع المعلومات التي تشاركها بعناية وسرية مهنية، ونطلب فقط ما يلزم لفهم المسألة وتقييمها. قبل بدء أي عمل، نوضح نطاق التكليف وآلية التواصل والمستندات المطلوبة، حتى تكون الخطوات والتوقعات واضحة من البداية." : "We handle information you share with care and professional discretion, and request only what is needed to understand and assess the matter. Before work begins, we clarify the engagement scope, communication process and documents required so the steps and expectations are clear from the start." }}</p>
+          </details>
+          <details>
+            <summary>{{ ar ? "ما هي الخدمات القانونية التي تقدمها الشركة؟" : "What legal services does the firm provide?" }}<span>+</span></summary>
+            <p>{{ ar ? "تشمل خدماتنا التقاضي والترافع، والاستشارات القانونية، وتأسيس الشركات والخدمات التجارية، والاستثمار الأجنبي، والامتياز التجاري، والملكية الفكرية، والعقود والصفقات التجارية. تختلف الخطوات بحسب طبيعة كل مسألة، ويمكنك الاطلاع على تفاصيل الخدمات أو التواصل معنا لتوضيح ما يناسب احتياجك." : "Our services include litigation and advocacy, legal advisory, company formation and commercial services, foreign investment, franchising, intellectual property, and contracts and commercial transactions. The right approach depends on the matter, so explore the service details or contact us to discuss what fits your needs." }} <a [routerLink]="['/', i18n.locale(), 'services']">{{ ar ? "استعرض الخدمات القانونية" : "Explore legal services" }}</a>.</p>
+          </details>
+          <details>
+            <summary>{{ ar ? "هل تتعاملون مع القضايا الفردية والشركات؟" : "Do you work with individuals and companies?" }}<span>+</span></summary>
+            <p>{{ ar ? "نعم، نستقبل استفسارات الأفراد والشركات، ونعمل على فهم ظروف كل عميل وأهدافه قبل اقتراح الخطوات المناسبة. قد تشمل المسائل الفردية استشارة أو تمثيلاً قانونياً، بينما قد تحتاج الشركات إلى دعم مستمر في العقود والحوكمة والمعاملات التجارية أو النزاعات. تواصل معنا لشرح حالتك وتحديد نطاق المساعدة الممكنة." : "Yes. We hear from both individuals and businesses, and take time to understand each client's circumstances and goals before discussing suitable next steps. Individual matters may call for advice or representation, while businesses may need ongoing support with contracts, governance, transactions or disputes. Contact us to describe your situation and discuss the support that may be appropriate." }} <a [routerLink]="['/', i18n.locale(), 'contact']">{{ ar ? "تواصل معنا" : "Contact us" }}</a>.</p>
           </details>
         </div>
       </section>
@@ -1961,9 +1937,52 @@ import { SERVICE_OFFERINGS } from "./service-catalog";
         font-size: 44px;
         min-height: 0;
       }
+      .site .faq-section .eyebrow {
+        margin: 0 0 14px;
+        color: #9b7c48;
+        font-weight: 700;
+        letter-spacing: .08em;
+      }
+      .site .faq-section h2 {
+        margin: 0;
+        color: #191919;
+        font-size: clamp(38px, 5vw, 58px);
+        line-height: 1.2;
+      }
       .site .faq-list summary {
-        font-size: 16px;
-        font-weight: 400;
+        gap: 20px;
+        color: #262522;
+        font-size: clamp(18px, 1.5vw, 21px);
+        font-weight: 600;
+        line-height: 1.65;
+      }
+      .site .faq-list details {
+        padding-block: 24px;
+      }
+      .site .faq-list details p {
+        max-width: 720px;
+        margin: 16px 30px 4px 0;
+        color: #57544e;
+        font-size: 17px;
+        line-height: 1.95;
+      }
+      .site .faq-list details p a {
+        color: #8d6d37;
+        font-weight: 700;
+        text-decoration: underline;
+        text-decoration-color: #c6a66b80;
+        text-underline-offset: 4px;
+      }
+      .site .faq-list details p a:hover {
+        color: #191919;
+        text-decoration-color: #191919;
+      }
+      @media (max-width: 620px) {
+        .site .faq-list details p {
+          margin-inline: 0;
+          font-size: 16px;
+          line-height: 1.85;
+        }
       }
       @media (max-width: 850px) {
         .site h2,

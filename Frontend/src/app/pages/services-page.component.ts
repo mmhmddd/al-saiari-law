@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ApiService } from '../core/services/api.service';
 import { LanguageService } from '../core/services/language.service';
@@ -24,12 +24,22 @@ interface PublicService {
     <main class="services-page" [attr.dir]="i18n.direction()" [class.is-ar]="ar">
       <app-site-navbar />
       <header class="services-hero">
+        @for (slide of heroSlides; track slide.id; let i = $index) {
+          <div class="hero-slide" [class.active]="i === activeHeroIndex" aria-hidden="true"><img [src]="slide.image" alt="" /></div>
+        }
+        <div class="hero-shade" aria-hidden="true"></div>
         <div class="hero-content">
           <p class="eyebrow">{{ ar ? 'مجالات عملنا' : 'OUR LEGAL SERVICES' }}</p>
           <h1>{{ ar ? 'رؤية قانونية واضحة، لكل خطوة.' : 'Clear legal guidance for every next step.' }}</h1>
           <p>{{ ar ? 'حلول قانونية عملية مصممة لتناسب احتياجاتك وأهدافك.' : 'Practical legal support shaped around your needs, your work and what comes next.' }}</p>
+          <a class="hero-booking" [routerLink]="['/', i18n.locale(), 'consultation']">{{ ar ? 'احجز استشارة' : 'Book a consultation' }} <span aria-hidden="true">↗</span></a>
         </div>
-        <img src="assets/consultation-logo-watermark.png" alt="" aria-hidden="true" />
+        <div class="hero-current-service" aria-live="polite"><span>{{ activeHeroIndex + 1 }} / {{ heroSlides.length }}</span><strong>{{ heroSlides[activeHeroIndex].name }}</strong></div>
+        <div class="hero-pagination" role="group" [attr.aria-label]="ar ? 'صور الخدمات القانونية' : 'Legal service images'">
+          @for (slide of heroSlides; track slide.id; let i = $index) {
+            <button type="button" [class.active]="i === activeHeroIndex" [attr.aria-label]="(ar ? 'عرض ' : 'Show ') + slide.name" [attr.aria-pressed]="i === activeHeroIndex" (click)="selectHeroSlide(i)"></button>
+          }
+        </div>
       </header>
 
       <section class="services-content" [attr.aria-label]="ar ? 'الخدمات القانونية' : 'Legal services'">
@@ -40,10 +50,11 @@ interface PublicService {
           <p class="services-state">{{ ar ? 'لا توجد خدمات متاحة حالياً.' : 'No services are available right now.' }}</p>
         } @else {
           <div class="service-grid">
-            @for (service of services; track service.slug) {
+            @for (service of services; track service.slug; let i = $index) {
               <article class="service-card" [id]="service.id || service.slug">
                 <a class="service-image" [routerLink]="['/', i18n.locale(), 'services', service.slug]" [attr.aria-label]="(ar ? 'اعرف المزيد عن ' : 'Learn more about ') + service.title">
                   <img [src]="service.fallbackImage || service.image?.url || 'assets/brand/office.png'" [alt]="service.title" loading="lazy" />
+                  <span class="service-image-index">{{ i + 1 }}</span>
                 </a>
                 <div class="service-copy">
                   <p class="service-kicker">{{ ar ? 'خدمة قانونية متخصصة' : 'SPECIALIST LEGAL SERVICE' }}</p>
@@ -68,18 +79,20 @@ interface PublicService {
   `,
   styles: [`
     :host{display:block;--gold:#ad8c59;--ink:#191919;--muted:#707070;--font:'SFMada',Georgia,serif;color:var(--ink)}.services-page{min-height:100vh;background:#f7f7f6;font-family:var(--font)}
-    .services-hero{position:relative;isolation:isolate;display:flex;align-items:center;min-height:390px;padding:clamp(58px,8vw,108px) clamp(24px,9vw,130px);overflow:hidden;background:#191919;color:#fff}.services-hero:after{content:'';position:absolute;z-index:-1;width:360px;height:360px;inset-inline-end:10%;top:-240px;border:1px solid #ad8c5940;border-radius:50%;box-shadow:0 0 0 30px #ad8c5912,0 0 0 70px #ad8c5908}.services-hero>img{position:absolute;z-index:-1;inset-inline-end:10%;bottom:-80px;width:clamp(190px,24vw,330px);opacity:.12}.hero-content{max-width:850px}.eyebrow{margin:0 0 14px;color:var(--gold);font-size:12px;font-weight:700;letter-spacing:.14em}.services-hero h1{max-width:830px;margin:0;font-size:clamp(42px,6vw,72px);font-weight:700;line-height:1.25}.is-ar .services-hero h1{line-height:1.5}.services-hero .hero-content>p:last-child{max-width:620px;margin:17px 0 0;color:#cecece;font-size:18px;line-height:1.9}.is-ar .services-hero .hero-content>p:last-child{font-size:20px}
-    .services-content{max-width:1380px;margin:auto;padding:clamp(45px,6vw,78px) clamp(22px,7vw,100px) clamp(65px,8vw,110px)}.section-intro{max-width:650px;margin-bottom:30px}.section-intro h2{margin:0;font-size:clamp(27px,3vw,38px);font-weight:700;line-height:1.45}.service-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}.service-card{overflow:hidden;border:1px solid #e5e3df;border-radius:10px;background:#fff;transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease}.service-card:hover{transform:translateY(-4px);border-color:#d3c5aa;box-shadow:0 18px 40px #0000000d}.service-image{position:relative;display:block;height:clamp(220px,25vw,320px);overflow:hidden;background:#dedbd4}.service-image:after{content:'';position:absolute;inset:0;background:linear-gradient(0deg,#15151555,transparent 45%)}.service-image img{display:block;width:100%;height:100%;object-fit:cover;filter:grayscale(.72) brightness(.88);transition:transform .65s ease,filter .4s ease}.service-card:hover .service-image img{transform:scale(1.035);filter:grayscale(.2) brightness(.94)}.service-number{position:absolute;z-index:1;top:17px;inset-inline-start:17px;display:grid;place-items:center;width:42px;height:42px;border:1px solid #fff9;border-radius:50%;background:#17171755;color:#fff;font-size:12px}.service-copy{padding:23px 25px 25px}.service-kicker{margin:0 0 8px;color:#947749;font-size:10px;font-weight:700;letter-spacing:.12em}.service-copy h3{margin:0 0 10px;font-size:clamp(22px,2.3vw,29px);font-weight:700;line-height:1.45}.service-copy h3 a{color:inherit;text-decoration:none}.service-description{min-height:62px;margin:0;color:#696969;font-size:15px;font-weight:400;line-height:1.9}.learn-link{display:inline-flex;align-items:center;gap:12px;margin-top:16px;padding-bottom:5px;border-bottom:1px solid #c8b58f;color:#725b36;font-size:14px;font-weight:700;transition:gap .2s ease}.learn-link:hover{gap:18px}.learn-link span{color:var(--gold);font-size:18px}.services-state{padding:45px 20px;text-align:center;color:var(--muted)}
-    .services-cta{padding:clamp(48px,7vw,82px) 22px;text-align:center;background:#1a1a1a;color:#fff}.services-cta h2{margin:0 auto;font-size:clamp(30px,4vw,48px);font-weight:700;line-height:1.4}.services-cta>p:not(.eyebrow){max-width:600px;margin:12px auto 24px;color:#c9c9c9;font-size:16px;line-height:1.8}.services-cta>a{display:inline-flex;align-items:center;justify-content:center;gap:25px;min-height:49px;padding:0 19px;border:1px solid var(--gold);border-radius:6px;background:var(--gold);color:#171717;font-size:15px;font-weight:700;transition:background .2s ease,transform .2s ease}.services-cta>a:hover{transform:translateY(-2px);background:#c0a574}.services-cta>a span{font-size:18px}
-    @media(max-width:700px){.services-hero{min-height:330px;padding:55px 22px}.services-hero h1{font-size:44px}.services-hero .hero-content>p:last-child{font-size:16px}.services-content{padding:43px 18px 62px}.section-intro h2{font-size:29px}.service-grid{grid-template-columns:1fr;gap:17px}.service-image{height:250px}.service-copy{padding:20px}.service-copy h3{font-size:25px}.service-description{min-height:0}.services-cta{padding:52px 22px}.services-cta>p:not(.eyebrow){font-size:15px}}
-    @media(prefers-reduced-motion:reduce){.service-card,.service-image img,.learn-link,.services-cta>a{transition:none}}
+    .services-hero{position:relative;isolation:isolate;display:flex;align-items:center;min-height:560px;padding:clamp(64px,8vw,108px) clamp(24px,9vw,130px);overflow:hidden;background:#171716;color:#fff}.hero-slide,.hero-shade{position:absolute;inset:0;z-index:-2;overflow:hidden}.hero-slide{opacity:0;transition:opacity 1s ease}.hero-slide.active{opacity:1}.hero-slide img{width:100%;height:100%;object-fit:cover;filter:grayscale(.75) brightness(.68);transform:scale(1.04);transition:transform 6s ease}.hero-slide.active img{transform:scale(1)}.hero-shade{z-index:-1;background:linear-gradient(90deg,#121211f2 0%,#121211c7 45%,#1212115c 100%)}.services-hero:after{content:'';position:absolute;z-index:-1;width:360px;height:360px;inset-inline-end:10%;top:-240px;border:1px solid #c6a66b45;border-radius:50%;box-shadow:0 0 0 30px #c6a66b12,0 0 0 70px #c6a66b08}.hero-content{max-width:800px;padding-bottom:55px}.eyebrow{margin:0 0 14px;color:var(--gold);font-size:12px;font-weight:700;letter-spacing:.14em}.services-hero h1{max-width:830px;margin:0;font-size:clamp(42px,6vw,72px);font-weight:700;line-height:1.25}.is-ar .services-hero h1{line-height:1.5}.services-hero .hero-content>p:not(.eyebrow){max-width:620px;margin:17px 0 0;color:#e1dfda;font-size:18px;line-height:1.9}.is-ar .services-hero .hero-content>p:not(.eyebrow){font-size:20px}.hero-booking{display:inline-flex;align-items:center;gap:25px;min-height:48px;margin-top:24px;padding:0 19px;border:1px solid #c6a66b;border-radius:5px;background:#c6a66b;color:#191919;font-size:15px;font-weight:700;transition:transform .2s ease,background .2s ease}.hero-booking:hover{transform:translateY(-2px);background:#d8bd8e}.hero-current-service{position:absolute;inset-inline-end:clamp(22px,8vw,120px);bottom:46px;display:grid;gap:6px;max-width:40%;text-align:end}.hero-current-service span{color:#d8bd8e;font:12px Georgia,serif;letter-spacing:.15em}.hero-current-service strong{color:#fff;font-size:clamp(18px,2vw,25px)}.hero-pagination{position:absolute;inset-inline-start:clamp(22px,8vw,120px);bottom:53px;display:flex;align-items:center;gap:8px}.hero-pagination button{width:20px;height:3px;padding:0;border:0;border-radius:4px;background:#ffffff75;cursor:pointer;transition:width .25s ease,background .25s ease}.hero-pagination button.active{width:42px;background:#d8bd8e}.hero-pagination button:focus-visible{outline:2px solid #fff;outline-offset:4px}
+    .services-content{max-width:1380px;margin:auto;padding:clamp(45px,6vw,78px) clamp(22px,7vw,100px) clamp(65px,8vw,110px)}.section-intro{max-width:650px;margin-bottom:30px}.section-intro h2{margin:0;font-size:clamp(27px,3vw,38px);font-weight:700;line-height:1.45}.service-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}.service-card{overflow:hidden;border:1px solid #e5e3df;border-radius:14px;background:#fff;transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease}.service-card:hover{transform:translateY(-5px);border-color:#d3c5aa;box-shadow:0 20px 44px #00000012}.service-image{position:relative;display:block;height:clamp(230px,25vw,330px);overflow:hidden;background:#dedbd4}.service-image:after{content:'';position:absolute;inset:0;background:linear-gradient(0deg,#11111165 0%,#11111108 55%,#11111120 100%)}.service-image img{display:block;width:100%;height:100%;object-fit:cover;filter:grayscale(.28) brightness(.88);transition:transform .65s ease,filter .4s ease}.service-card:hover .service-image img{transform:scale(1.055);filter:grayscale(0) brightness(.96)}.service-image-index{position:absolute;z-index:1;top:17px;inset-inline-start:17px;display:grid;place-items:center;width:42px;height:42px;border:1px solid #d8bd8e;border-radius:50%;background:#171716aa;color:#fff;font:13px Georgia,serif}.service-number{position:absolute;z-index:1;top:17px;inset-inline-start:17px;display:grid;place-items:center;width:42px;height:42px;border:1px solid #fff9;border-radius:50%;background:#17171755;color:#fff;font-size:12px}.service-copy{padding:25px 27px 27px}.service-kicker{margin:0 0 8px;color:#947749;font-size:10px;font-weight:700;letter-spacing:.12em}.service-copy h3{margin:0 0 10px;font-size:clamp(22px,2.3vw,29px);font-weight:700;line-height:1.45}.service-copy h3 a{color:inherit;text-decoration:none}.service-description{min-height:62px;margin:0;color:#696969;font-size:15px;font-weight:400;line-height:1.9}.learn-link{display:inline-flex;align-items:center;gap:12px;margin-top:16px;padding-bottom:5px;border-bottom:1px solid #c8b58f;color:#725b36;font-size:14px;font-weight:700;transition:gap .2s ease}.learn-link:hover{gap:18px}.learn-link span{color:var(--gold);font-size:18px}.services-state{padding:45px 20px;text-align:center;color:var(--muted)}
+    .services-cta{position:relative;overflow:hidden;padding:clamp(60px,8vw,100px) 22px;text-align:center;background:radial-gradient(ellipse at 50% 0%,#302b22 0%,#1a1a19 54%,#111 100%);color:#fff;border-top:1px solid #c6a66b55}.services-cta h2{position:relative;margin:0 auto;font-size:clamp(30px,4vw,48px);font-weight:700;line-height:1.4}.services-cta>p:not(.eyebrow){max-width:600px;margin:12px auto 24px;color:#c9c9c9;font-size:16px;line-height:1.8}.services-cta>a{display:inline-flex;align-items:center;justify-content:center;gap:25px;min-height:49px;padding:0 19px;border:1px solid var(--gold);border-radius:6px;background:var(--gold);color:#171717;font-size:15px;font-weight:700;transition:background .2s ease,transform .2s ease}.services-cta>a:hover{transform:translateY(-2px);background:#d8bd8e}.services-cta>a span{font-size:18px}
+    @media(max-width:700px){.services-hero{min-height:510px;padding:48px 22px 115px}.hero-content{padding-bottom:30px}.services-hero h1{font-size:42px}.services-hero .hero-content>p:not(.eyebrow){font-size:16px}.hero-current-service{inset-inline-end:22px;bottom:39px;max-width:55%}.hero-pagination{inset-inline-start:22px;bottom:51px}.hero-pagination button{width:13px}.hero-pagination button.active{width:28px}.services-content{padding:43px 18px 62px}.section-intro h2{font-size:29px}.service-grid{grid-template-columns:1fr;gap:17px}.service-image{height:250px}.service-copy{padding:20px}.service-copy h3{font-size:25px}.service-description{min-height:0}.services-cta{padding:52px 22px}.services-cta>p:not(.eyebrow){font-size:15px}}
+    @media(prefers-reduced-motion:reduce){.hero-slide,.hero-slide img,.service-card,.service-image img,.learn-link,.services-cta>a{transition:none!important}.hero-slide{opacity:0}.hero-slide.active{opacity:1}}
   `],
 })
-export class ServicesPageComponent {
+export class ServicesPageComponent implements OnInit, OnDestroy {
   readonly i18n = inject(LanguageService);
   private readonly api = inject(ApiService);
   services: PublicService[] = [];
   loading = true;
+  activeHeroIndex = 0;
+  private heroTimer?: number;
   constructor() {
     this.api.get<{ items: PublicService[] }>('/services', { lang: this.i18n.locale() }).subscribe({
       next: (response) => {
@@ -98,6 +111,15 @@ export class ServicesPageComponent {
       error: () => { this.services = this.catalogFallback(); this.loading = false; },
     });
   }
+  ngOnInit(): void {
+    if (typeof window === 'undefined' || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    this.heroTimer = window.setInterval(() => this.activeHeroIndex = (this.activeHeroIndex + 1) % this.heroSlides.length, 4800);
+  }
+  ngOnDestroy(): void { if (this.heroTimer !== undefined) window.clearInterval(this.heroTimer); }
+  get heroSlides(): { id: string; name: string; image: string }[] {
+    return SERVICE_OFFERINGS.map((service) => ({ id: service.id, name: this.ar ? service.ar : service.en, image: service.image }));
+  }
+  selectHeroSlide(index: number): void { this.activeHeroIndex = index; }
   get ar(): boolean { return this.i18n.locale() === 'ar'; }
   private catalogFallback(): PublicService[] {
     return SERVICE_OFFERINGS.map((item) => ({
