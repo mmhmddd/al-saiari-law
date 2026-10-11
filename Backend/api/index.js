@@ -1,13 +1,17 @@
 const app = require('../src/app');
 const connectDatabase = require('../src/config/database');
 const ensureAdminAccount = require('../src/services/admin-seed.service');
+const ensureWebsiteServices = require('../src/services/website-service-seed.service');
 
 let initialization;
 
 async function initialize() {
   if (!initialization) {
     initialization = connectDatabase()
-      .then(() => ensureAdminAccount())
+      .then(async () => {
+        await ensureAdminAccount();
+        await ensureWebsiteServices();
+      })
       .catch((error) => {
         initialization = undefined;
         throw error;

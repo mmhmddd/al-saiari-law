@@ -1,6 +1,7 @@
 const env = require('./config/environment');
 const connectDatabase = require('./config/database');
 const ensureAdminAccount = require('./services/admin-seed.service');
+const ensureWebsiteServices = require('./services/website-service-seed.service');
 const app = require('./app');
 
 let server;
@@ -8,6 +9,7 @@ let server;
 async function start() {
   await connectDatabase();
   const admin = await ensureAdminAccount();
+  await ensureWebsiteServices();
   // Never log the configured email or password at startup.
   console.log(`[Seed] Default admin ${admin.created ? 'created' : 'verified'} successfully.`);
 

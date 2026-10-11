@@ -6,8 +6,10 @@ import { ConsultationService } from '../core/services/consultation.service';
 import { LanguageService } from '../core/services/language.service';
 import { SiteFooterComponent } from './shared/site-footer.component';
 import { SiteNavbarComponent } from './shared/site-navbar.component';
+import { SERVICE_OFFERINGS } from './service-catalog';
 
 interface PublicServiceOption { _id: string; title: string; }
+interface ServiceApiOption { _id?: string; id?: string; title?: string | { en?: string; ar?: string }; slug?: string | { en?: string; ar?: string }; }
 interface CreatedConsultation { _id?: string; }
 interface CalendarDay { value: string; number: number; label: string; disabled: boolean; selected: boolean; }
 
@@ -178,10 +180,45 @@ export class ConsultationBookingPageComponent {
   });
 
   constructor() {
-    this.api.get<{ items: PublicServiceOption[] }>('/services').subscribe({
-      next: (response) => { this.services = response.data.items ?? []; this.loadingServices = false; },
-      error: (error) => { this.loadingServices = false; this.serviceLoadError = true; this.serviceLoadMessage = this.i18n.errorMessage(error); },
+    this.api.get<{ items?: ServiceApiOption[] } | ServiceApiOption[]>('/services').subscribe({
+      next: (response) => {
+        // Public API versions may return localized strings or bilingual
+        // title objects. Normalize both shapes before rendering native options.
+        const items = Array.isArray(response.data) ? response.data : response.data?.items ?? [];
+        this.services = items.flatMap((item) => {
+          const id = item._id ?? item.id;
+          const title = typeof item.title === 'string'
+            ? item.title
+            : item.title?.[this.i18n.locale()] ?? item.title?.en ?? item.title?.ar ?? '';
+          const label = title.trim() || this.catalogTitle(item.slug);
+          return id && label ? [{ _id: id, title: label }] : [];
+        });
+        if (!this.services.length) this.services = this.catalogFallbackServices();
+        this.loadingServices = false;
+        this.serviceLoadError = false;
+        if (this.serviceLoadError) this.serviceLoadMessage = this.ar
+          ? 'لا توجد خدمات متاحة للاختيار حالياً.'
+          : 'No legal services are available to select right now.';
+      },
+      error: () => {
+        this.services = this.catalogFallbackServices();
+        this.loadingServices = false;
+        this.serviceLoadError = false;
+      },
     });
+  }
+
+  private catalogFallbackServices(): PublicServiceOption[] {
+    return SERVICE_OFFERINGS.map((offering) => ({
+      _id: offering.id,
+      title: this.ar ? offering.ar : offering.en,
+    }));
+  }
+
+  private catalogTitle(slug: ServiceApiOption['slug']): string {
+    const localizedSlug = typeof slug === 'string' ? slug : slug?.en ?? slug?.ar ?? '';
+    const offering = SERVICE_OFFERINGS.find((item) => item.id === localizedSlug);
+    return offering ? (this.ar ? offering.ar : offering.en) : '';
   }
 
   get ar(): boolean { return this.i18n.locale() === 'ar'; }

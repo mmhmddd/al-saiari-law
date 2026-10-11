@@ -36,7 +36,7 @@ export const routes: Routes = [
           { path: 'articles', data: { section: 'articles' }, loadComponent: () => import('./features/admin/pages/articles/articles-page.component').then((m) => m.ArticlesPageComponent) },
           { path: 'articles/create', data: { section: 'articles', create: true }, loadComponent: () => import('./features/admin/pages/articles/article-create-page.component').then((m) => m.ArticleCreatePageComponent) },
           { path: 'services', data: { section: 'services' }, loadComponent: () => import('./features/admin/pages/services/services-page.component').then((m) => m.ServicesPageComponent) },
-          { path: 'homepage', data: { section: 'homepage' }, loadComponent: () => import('./features/admin/pages/homepage/homepage-page.component').then((m) => m.HomepagePageComponent) },
+          { path: 'homepage', pathMatch: 'full', redirectTo: 'dashboard' },
           { path: 'settings', data: { section: 'settings' }, loadComponent: () => import('./features/admin/pages/settings/settings-page.component').then((m) => m.SettingsPageComponent) },
           { path: 'notifications', data: { section: 'notifications' }, loadComponent: () => import('./features/admin/pages/notifications/notifications-page.component').then((m) => m.NotificationsPageComponent) },
         ],
@@ -46,3 +46,4 @@ export const routes: Routes = [
   },
   { path: '**', redirectTo: 'ar' },
 ];
+

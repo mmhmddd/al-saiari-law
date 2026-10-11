@@ -5,6 +5,7 @@ const { success, buildPagination } = require('../utils/apiResponse');
 const { generateUniqueSlug } = require('../utils/generateSlug');
 const cloudinaryService = require('../services/cloudinary.service');
 const { localizeDocument } = require('../utils/localization');
+const ensureWebsiteServices = require('../services/website-service-seed.service');
 
 /**
  * GET /api/services (public — active only)
@@ -62,6 +63,20 @@ exports.getAdminServices = catchAsync(async (req, res) => {
   return success(res, {
     message: 'Services retrieved successfully',
     data: { items, pagination: buildPagination({ page, limit, total }) },
+  });
+});
+
+/**
+ * POST /api/admin/services/import-website-catalog
+ * Idempotently stores the site's built-in offerings so admins can manage them.
+ * Existing services with matching English slugs are left untouched.
+ */
+exports.importWebsiteCatalog = catchAsync(async (req, res) => {
+  const imported = await ensureWebsiteServices();
+  const items = await Service.find().sort({ order: 1, createdAt: -1 });
+  return success(res, {
+    message: 'Website services are ready to manage',
+    data: { items, imported },
   });
 });
 

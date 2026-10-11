@@ -18,6 +18,7 @@ const adminRouter = express.Router();
 adminRouter.use(authenticate, authorize('admin'));
 
 adminRouter.get('/', consultationController.getConsultations);
+adminRouter.get('/analytics', consultationController.getConsultationAnalytics);
 adminRouter.get('/:id', idParamValidator, validate, consultationController.getConsultationById);
 adminRouter.patch('/:id/status', statusValidator, validate, consultationController.updateConsultationStatus);
 adminRouter.delete('/:id', idParamValidator, validate, consultationController.deleteConsultation);

@@ -81,6 +81,36 @@ exports.getConsultations = catchAsync(async (req, res) => {
 });
 
 /**
+ * GET /api/admin/consultations/analytics?days=7|30|90
+ * Returns a compact daily series and status breakdown for the dashboard.
+ */
+exports.getConsultationAnalytics = catchAsync(async (req, res) => {
+  const requestedDays = Number.parseInt(req.query.days, 10);
+  const days = [7, 30, 90].includes(requestedDays) ? requestedDays : 30;
+  const start = new Date();
+  start.setUTCHours(0, 0, 0, 0);
+  start.setUTCDate(start.getUTCDate() - (days - 1));
+
+  const [daily, statuses] = await Promise.all([
+    Consultation.aggregate([
+      { $match: { createdAt: { $gte: start } } },
+      { $group: { _id: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt', timezone: 'UTC' } }, count: { $sum: 1 } } },
+      { $sort: { _id: 1 } },
+    ]),
+    Consultation.aggregate([
+      { $match: { createdAt: { $gte: start } } },
+      { $group: { _id: '$status', count: { $sum: 1 } } },
+      { $sort: { _id: 1 } },
+    ]),
+  ]);
+
+  return success(res, {
+    message: 'Consultation analytics retrieved successfully',
+    data: { days, daily, statuses, since: start.toISOString() },
+  });
+});
+
+/**
  * GET /api/admin/consultations/:id
  */
 exports.getConsultationById = catchAsync(async (req, res, next) => {

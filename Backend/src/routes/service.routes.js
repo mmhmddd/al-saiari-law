@@ -22,6 +22,7 @@ const adminRouter = express.Router();
 adminRouter.use(authenticate, authorize('admin'));
 
 adminRouter.get('/', serviceController.getAdminServices);
+adminRouter.post('/import-website-catalog', serviceController.importWebsiteCatalog);
 adminRouter.post('/', uploadSingleImage('image'), createServiceValidator, validate, serviceController.createService);
 // Reorder must be declared before /:id routes to avoid "reorder" being parsed as an id
 adminRouter.patch('/reorder', reorderValidator, validate, serviceController.reorderServices);

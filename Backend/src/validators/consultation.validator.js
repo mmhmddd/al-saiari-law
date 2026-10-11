@@ -9,7 +9,9 @@ const createConsultationValidator = [
     .isLength({ max: 30 })
     .matches(/^[0-9+\-\s()]{6,30}$/)
     .withMessage('Phone number format is invalid'),
-  body('service').optional({ nullable: true }).isMongoId().withMessage('Service must be a valid service id'),
+  body('service').optional({ nullable: true }).custom((value) =>
+    /^[a-f\d]{24}$/i.test(value) || /^[a-z0-9-]+$/i.test(value),
+  ).withMessage('Service must be a valid service id or slug'),
   body('preferredDate').optional().trim(),
   body('preferredTime').optional().trim(),
 ];

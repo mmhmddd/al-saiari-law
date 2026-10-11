@@ -6,11 +6,67 @@ const { localizeDocument } = require('../utils/localization');
 
 const SINGLETON_FILTER = { singletonKey: 'site_settings' };
 
+// These values are already used by the public website (home hero, contact
+// page, and document metadata). Keep the admin settings in sync with them
+// when the singleton is first created or still contains blank defaults.
+const PUBLIC_SITE_DEFAULTS = {
+  siteName: {
+    en: 'ALSAIARI LAW FIRM',
+    ar: 'شركة السياري للمحاماة والاستشارات القانونية',
+  },
+  contact: {
+    address: {
+      en: 'Riyadh, Kingdom of Saudi Arabia',
+      ar: 'الرياض، المملكة العربية السعودية',
+    },
+    phone: '+966 57 090 7930',
+    whatsapp: '+966 57 090 7930',
+  },
+  seo: {
+    defaultTitle: {
+      en: 'Al Saiari Law Firm | Saudi Arabia',
+      ar: 'شركة السياري للمحاماة والاستشارات القانونية | السعودية',
+    },
+    defaultDescription: {
+      en: 'Legal services for individuals and businesses in Saudi Arabia, delivered with practical insight and professional care.',
+      ar: 'خدمات قانونية للأفراد والمنشآت في المملكة العربية السعودية، برؤية عملية وعناية مهنية.',
+    },
+  },
+};
+
+function fillIfBlank(target, key, value) {
+  if (!String(target[key] || '').trim()) {
+    target[key] = value;
+    return true;
+  }
+  return false;
+}
+
+function applyPublicSiteDefaults(settings) {
+  let changed = false;
+  for (const language of ['en', 'ar']) {
+    changed = fillIfBlank(settings.siteName, language, PUBLIC_SITE_DEFAULTS.siteName[language]) || changed;
+    changed = fillIfBlank(settings.contact.address, language, PUBLIC_SITE_DEFAULTS.contact.address[language]) || changed;
+    changed = fillIfBlank(settings.seo.defaultTitle, language, PUBLIC_SITE_DEFAULTS.seo.defaultTitle[language]) || changed;
+    changed = fillIfBlank(settings.seo.defaultDescription, language, PUBLIC_SITE_DEFAULTS.seo.defaultDescription[language]) || changed;
+  }
+  changed = fillIfBlank(settings.contact, 'whatsapp', PUBLIC_SITE_DEFAULTS.contact.whatsapp) || changed;
+  if (!settings.contact.phones || !settings.contact.phones.length) {
+    settings.contact.phones = [{
+      label: { en: 'Main Office', ar: 'المكتب الرئيسي' },
+      number: PUBLIC_SITE_DEFAULTS.contact.phone,
+    }];
+    changed = true;
+  }
+  return changed;
+}
+
 async function getOrCreateSettings() {
   let settings = await SiteSettings.findOne(SINGLETON_FILTER);
   if (!settings) {
     settings = await SiteSettings.create({});
   }
+  if (applyPublicSiteDefaults(settings)) await settings.save();
   return settings;
 }
 
